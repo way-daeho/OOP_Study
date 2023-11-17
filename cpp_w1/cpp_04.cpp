@@ -1,4 +1,5 @@
-/* new와 delete 의 사용 */
+/*
+// new와 delete 의 사용 
 #include <iostream>
 
 int main(){
@@ -10,3 +11,4 @@ int main(){
 	delete p;
 	return 0;
 }
+*/
