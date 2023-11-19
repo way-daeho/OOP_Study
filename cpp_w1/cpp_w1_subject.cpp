@@ -18,7 +18,6 @@
 			해결방안 생각하기 if else 문으로 해결하는 것 밖에 생각이 안들음
 */
 
-/*
 #include <iostream>
 class Date {
 	int year_;
@@ -155,13 +154,13 @@ int main()
 	Date date;
 	date.SetDate(2012, 2, 28);
 	date.showDate();
-	date.AddDay(5000);
+	date.AddDay(5050);
 	date.showDate();
 	return 0;
 }
 
-예외처리를 하긴 했지만, 윤년을 구하는 함수를 만들어서 사용하는 것이 더 좋을 것 같다. 주어진 조건만 사용하긴 했는데.
-*/
+// 예외처리를 하긴 했지만, 윤년을 구하는 함수를 만들어서 사용하는 것이 더 좋을 것 같다. 주어진 조건만 사용하긴 했는데.
+
 
 /* 생각해보기
 	아래와 같은 문자열 클래스를 완성해보세요. */
