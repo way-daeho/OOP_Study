@@ -162,171 +162,6 @@ int main(){
 // 	return 0;
 // }
 
-/* 생각 해볼 문제
-	Date 클래스를 디자인
-	SetDate -> Date 함수 내부 초기화
-	AddDay, AddMonth, Addyear -> 일, 월, 년 원하는 만큼 더함.
-*/
-
-/* Edge Point
-	1. Luna year 윤년 year % 4 == 0 일 때 2월은 29일까지
-		역은 2월 28일까지 존재.
-	2. 12월 이후로 달을 더하게 된다면,
-		1. year가 1 증가해야함.
-		2. 달 별로 max_day가 다르기 때문에 이 부분도 생각해야함
-			1,3,5,7,8,10,12 -> 31
-			4, 6 ,9, 11 -> 30
-			2월 year % 4 == 0 -> 29
-			else 28
-		3. 2012 2월 28 + 3 일 -> 2012년 3월 2일, 2013 2월 28일 + 3일 -> 2013 3월 3일
-			해결방안 생각하기 if else 문으로 해결하는 것 밖에 생각이 안들음
-*/
-
-/*
-#include <iostream>
-class Date {
-	int year_;
-	int month_; // 1 부터 12 까지.
-	int day_; // 1 부터 31 까지.
-
-	public:
-		void SetDate(int year, int month, int date)
-		{
-			// year_ 초기화 부분
-			if (year < 0)
-			{
-				std::cout << "Error : year는 양수이여야 합니다." << std::endl;
-				exit(1);
-			}
-			else
-				year_ = year;
-
-			// month와 date 초기화 부분 -> date는 month의 값의 종속이 된다.
-			if (month <= 0 || 12 < month || date < 1 || 31 < date)
-			{
-				std::cout << "Error : 유효하지 않은 값을 입력하셨습니다." << std::endl;
-				std::cout << "입력한 month 값 : " << month << " 입력한 date 값 : " << date << std::endl;
-				exit(1);
-			}
-			else
-			{
-				month_ = month;
-				day_ = date;
-			}
-
-			// 윤년 구별
-			if ((year % 4 == 0 && year % 100 != 0 && month == 2) || (year % 400 == 0 && month == 2))
-			{
-				if (date < 1 || 29 < date)
-				{
-					std::cout << "입력한 " << year << "는 윤년입니다. 최소 입력 date 는 \"1\"이고 최대 입력 date는 \"29\"입니다. 유효한 date값을 입력해주세요." << std::endl;
-					exit(1);
-				}
-			}
-			else
-			{
-				if (date < 1 || 28 < date)
-				{
-					std::cout << "입력한 " << year << "는 윤년이 아닙니다. 최소 입력 date 는 \"1\"이고 최대 입력 date는 \"28\"입니다. 유효한 date값을 입력해주세요." << std::endl;
-					exit(1);
-				}
-			}
-
-			if (month == 4 || month == 6 || month == 9 || month == 11)
-				if (30 < date)
-				{
-					std::cout << month <<"월의 최대 date는 30입니다."<<std::endl;
-					std::cout << "입력한 date 값 : " << date << std::endl;
-					exit(1);
-				}
-			day_ = date;
-		};
-
-		void AddDay(int inc)
-		{
-			if (inc < 0)
-			{
-				std::cout << "해당 프로그램은 양수의 값만 더합니다." << std::endl;
-				exit(1);
-			}
-
-			int MAX_DAY[12] = {31, 28 , 31, 30 ,31, 30 ,31, 31, 30, 31, 30 ,31};
-			int MD = MAX_DAY[month_ - 1];
-			if ((year_ % 4 == 0 && year_ % 100 != 0 && month_ ==2) || (year_ % 400 == 0 && month_ == 2))
-				MD = 29;
-			if (day_ + inc <= MD)
-			{
-				day_ += inc; // 해당 달에 포함되는 경우
-				return ;
-			}
-			else if (MAX_DAY[month_ - 1] < day_ + inc)
-			{
-				int tmpMonth = month_;
-				int tmpYear = year_;
-				int overMonthDaysSum = 0;
-				int addMonth = -1;
-				if (day_ + inc <= MAX_DAY[month_ - 1])
-					day_ = (day_ + inc);
-				else
-				{
-					while (overMonthDaysSum < day_ + inc)
-					{
-						addMonth++;
-						if (12 < tmpMonth)
-						{
-							tmpMonth = 1;
-							tmpYear++;
-						}
-						if ((tmpYear % 4 == 0 && tmpYear % 100 != 0 && tmpMonth == 2) || tmpYear % 400 == 0 && tmpMonth == 2)
-							overMonthDaysSum += 29;
-						else
-							overMonthDaysSum += MAX_DAY[tmpMonth - 1];
-						tmpMonth++;
-					}
-					AddMonth(addMonth);
-					day_ = (day_ + inc) - (overMonthDaysSum - MAX_DAY[tmpMonth - 2]) - 1;
-				}
-			}
-		};
-
-		void AddMonth(int inc)
-		{
-			if (inc <= 0)
-			{
-				std::cout << "Error : 유효하지 않은 값을 입력하셨습니다." << std::endl;
-				std::cout << "입력한 값 : " << inc << std::endl;
-				exit(1);
-			}
-			AddYear((inc + month_ - 1) / 12);
-			month_ = month_ + (inc % 12);
-			if (12 < month_)
-				month_ %= 12;
-		};
-
-		void AddYear(int inc)
-		{
-			year_ += inc;
-		};
-
-	void showDate()
-	{
-		std::cout << year_ << " 년 " << month_ << " 월 " << day_ << " 일 " << std::endl;
-	};
-};
-
-int main()
-{
-	Date date;
-	date.SetDate(2012, 2, 28);
-	date.showDate();
-	date.AddDay(5000);
-	date.showDate();
-	return 0;
-}
-
-예외처리를 하긴 했지만, 윤년을 구하는 함수를 만들어서 사용하는 것이 더 좋을 것 같다. 주어진 조건만 사용하긴 했는데.
-*/
-
 /* 함수의 오버로딩 */
 // #include <iostream>
 
@@ -480,27 +315,844 @@ int main()
 // }
 
 // 디폴트 생성자 정의해보기
+// #include <iostream>
+// class Date {
+// int year_;
+// int month_; // 1 부터 12 까지.
+// int day_; // 1 부터 31 까지.
+// public:
+// void ShowDate();
+// Date() {
+// year_ = 2012;
+// month_ = 7;
+// day_ = 12;
+// }
+// };
+// void Date::ShowDate() {
+// std::cout << "오늘은 " << year_ << " 년 " << month_ << " 월 " << day_
+// << " 일 입니다 " << std::endl;
+// }
+// int main() {
+// Date day = Date();
+// Date day2;
+// day.ShowDate();
+// day2.ShowDate();
+// return 0;
+// }
+
+/* 생성자 오버로딩 */
+// #include <iostream>
+
+// class Date {
+// 	int year_;
+// 	int month_; // 1 부터 12 까지.
+// 	int day_; // 1 부터 31 까지.
+
+// 	public:
+// 		void ShowDate();
+
+// 		Date() {
+// 			std::cout << "기본 생성자 호출!" << std::endl;
+// 			year_ = 2012;
+// 			month_ = 7;
+// 			day_ = 12;
+// 		}
+
+// 		Date(int year, int month, int day) {
+// 			std::cout << "인자 3 개인 생성자 호출!" << std::endl;
+// 			year_ = year;
+// 			month_ = month;
+// 			day_ = day;
+// 		}
+// 		// Date 클래스에 여러가지 생성자들을 추가 -> 가능한 이유. 함수의 오버로딩 || 메소드 오버로딩
+// 		Date(int year) {
+// 			std::cout << "인자 3 개인 생성자 호출!" << std::endl;
+// 			year_ = year;
+// 		}
+
+// 		Date(int month) {
+// 			std::cout << "인자 3 개인 생성자 호출!" << std::endl;
+// 			month_ = month;
+// 		}
+
+// 		Date(int day) {
+// 			std::cout << "인자 3 개인 생성자 호출!" << std::endl;
+// 			day_ = day;
+// 		}
+
+// 		Date(int year, int month) {
+// 			std::cout << "인자 3 개인 생성자 호출!" << std::endl;
+// 			year_ = year;
+// 			month_ = month;
+// 		}
+
+// 		Date(int year, int day) {
+// 			std::cout << "인자 3 개인 생성자 호출!" << std::endl;
+// 			year_ = year;
+// 			day_ = day;
+// 		}
+
+// 		Date(int month, int day) {
+// 			std::cout << "인자 3 개인 생성자 호출!" << std::endl;
+// 			month_ = month;
+// 			day_ = day;
+// 		}
+// };
+
+// void Date::ShowDate() {
+// 	std::cout << "오늘은" << year_ << " 년 " << month_ << " 월 " << day_ << " 일 입니다 " << std::endl;
+// }
+
+// int main() {
+// 	Date day = Date();
+// 	Date day2(2023, 11, 19);
+
+// 	day.ShowDate();
+// 	day2.ShowDate();
+
+// 	return (0);
+// }
+
+/* 복사 생성자와 소멸자 */
+// #include <iostream>
+
+// class Marine {
+// 	int hp; // 마린 체력
+// 	int coord_x, coord_y; // 마린 위치
+// 	int damage; // 공격력
+// 	bool is_dead;
+
+// 	public:
+// 		Marine(); // 기본 생성자
+// 		Marine(int x, int y); // x, y 좌표에 마린 생성
+
+// 		int attack(); // 데미지를 리턴
+// 		void be_attacked(int damage_earn); // 입는 데미지
+// 		void move(int x, int y); // 새로운 위치
+
+// 		void show_status(); // 상태를 보여준다.
+// };
+// Marine::Marine() {
+// 	hp = 50;
+// 	coord_x = coord_y = 0;
+// 	damage = 5;
+// 	is_dead = false;
+// }
+// Marine::Marine(int x, int y) {
+// 	coord_x = x;
+// 	coord_y = y;
+// 	hp = 50;
+// 	damage = 5;
+// 	is_dead = false;
+// }
+// void Marine::move(int x, int y) {
+// 	coord_x = x;
+// 	coord_y = y;
+// }
+// int Marine::attack() { return (damage); }
+// void Marine::be_attacked(int damage_earn) {
+// 	hp -= damage_earn;
+// 	if (hp <= 10) is_dead = true;
+// }
+// void Marine::show_status() {
+// 	std::cout << " *** Marine *** " << std::endl;
+// 	std::cout << " Location : ( " << coord_x << " , " << coord_y << " ) " << std::endl;
+// 	std::cout << " HP : " << hp << std::endl;
+// }
+
+// int main() {
+// 	Marine marine1(2, 3);
+// 	Marine marine2(3, 5);
+
+// 	marine1.show_status();
+// 	marine2.show_status();
+
+// 	std::cout << std::endl << "마린1 이 마린2 를 공격! "<< std::endl;
+// 	marine2.be_attacked(marine1.attack());
+
+// 	marine1.show_status();
+// 	marine2.show_status();
+// }
+// int main() {
+// 	Marine* marines[100];
+// 	marines[0] = new Marine(2, 3);
+// 	marines[1] = new Marine(3, 5);
+
+// 	marines[0]->show_status();
+// 	marines[1]->show_status();
+
+// 	std::cout << std::endl << "마린1 이 마린2 를 공격! "<< std::endl;
+
+// 	marines[0]->be_attacked(marines[1]->attack());
+
+// 	marines[0]->show_status();
+// 	marines[1]->show_status();
+
+// 	delete marines[0];
+// 	delete marines[1];
+// }
+
+/* 마린 이름 만들기 */
+// #include <iostream>
+// #include <string.h>
+// class Marine
+// {
+// 	int hp;				  // 마린 체력
+// 	int coord_x, coord_y; // 마린 위치
+// 	int damage;			  // 공격력
+// 	bool is_dead;
+// 	char *name; // 마린 이름
+
+// public:
+// 	Marine();									   // 기본 생성자
+// 	Marine(int x, int y, const char *marine_name); // 이름까지 지정
+// 	Marine(int x, int y);						   // x, y 좌표에 마린 생성
+
+// 	int attack();					   // 데미지를 리턴
+// 	void be_attacked(int damage_earn); // 입는 데미지
+// 	void move(int x, int y);		   // 새로운 위치
+
+// 	void show_status(); // 상태를 보여준다.
+// };
+// Marine::Marine()
+// {
+// 	hp = 50;
+// 	coord_x = coord_y = 0;
+// 	damage = 5;
+// 	is_dead = false;
+// 	name = NULL;
+// }
+// Marine::Marine(int x, int y, const char *marine_name)
+// {
+// 	name = new char[strlen(marine_name) + 1];
+// 	strcpy(name, marine_name);
+
+// 	coord_x = x;
+// 	coord_y = y;
+// 	hp = 50;
+// 	damage = 5;
+// 	is_dead = false;
+// }
+// Marine::Marine(int x, int y)
+// {
+// 	coord_x = x;
+// 	coord_y = y;
+// 	hp = 50;
+// 	damage = 5;
+// 	is_dead = false;
+// 	name = NULL;
+// }
+// void Marine::move(int x, int y)
+// {
+// 	coord_x = x;
+// 	coord_y = y;
+// }
+// int Marine::attack() { return (damage); }
+// void Marine::be_attacked(int damage_earn)
+// {
+// 	hp -= damage_earn;
+// 	if (hp <= 10)
+// 		is_dead = true;
+// }
+// void Marine::show_status()
+// {
+// 	std::cout << " *** Marine : " << name << " ***" << std::endl;
+// 	std::cout << " Location : ( " << coord_x << " , " << coord_y << " ) " << std::endl;
+// 	std::cout << " HP : " << hp << std::endl;
+// }
+
+// int main()
+// {
+// 	Marine *marines[100];
+// 	marines[0] = new Marine(2, 3, "Marine 2");
+// 	marines[1] = new Marine(1, 5, "Marine 1");
+// 	marines[0]->show_status();
+// 	marines[1]->show_status();
+// 	std::cout << std::endl << "마린 1 이 마린 2 를 공격! " << std::endl;
+// 	marines[0]->be_attacked(marines[1]->attack());
+// 	marines[0]->show_status();
+// 	marines[1]->show_status();
+// 	delete marines[0];
+// 	delete marines[1];
+// }
+
+/* 소멸자 */
+// #include <iostream>
+// #include <string.h>
+// class Marine
+// {
+// 	int hp;				  // 마린 체력
+// 	int coord_x, coord_y; // 마린 위치
+// 	int damage;			  // 공격력
+// 	bool is_dead;
+// 	char *name; // 마린 이름
+
+// public:
+// 	Marine();									   // 기본 생성자
+// 	Marine(int x, int y, const char *marine_name); // 이름까지 지정
+// 	Marine(int x, int y);						   // x, y 좌표에 마린 생성
+// 	~Marine();
+
+// 	int attack();					   // 데미지를 리턴
+// 	void be_attacked(int damage_earn); // 입는 데미지
+// 	void move(int x, int y);		   // 새로운 위치
+
+// 	void show_status(); // 상태를 보여준다.
+// };
+// Marine::Marine()
+// {
+// 	hp = 50;
+// 	coord_x = coord_y = 0;
+// 	damage = 5;
+// 	is_dead = false;
+// 	name = NULL;
+// }
+// Marine::Marine(int x, int y, const char *marine_name)
+// {
+// 	name = new char[strlen(marine_name) + 1];
+// 	strcpy(name, marine_name);
+
+// 	coord_x = x;
+// 	coord_y = y;
+// 	hp = 50;
+// 	damage = 5;
+// 	is_dead = false;
+// }
+// Marine::Marine(int x, int y)
+// {
+// 	coord_x = x;
+// 	coord_y = y;
+// 	hp = 50;
+// 	damage = 5;
+// 	is_dead = false;
+// 	name = NULL;
+// }
+// void Marine::move(int x, int y)
+// {
+// 	coord_x = x;
+// 	coord_y = y;
+// }
+// int Marine::attack() { return (damage); }
+// void Marine::be_attacked(int damage_earn)
+// {
+// 	hp -= damage_earn;
+// 	if (hp <= 10)
+// 		is_dead = true;
+// }
+// void Marine::show_status()
+// {
+// 	std::cout << " *** Marine : " << name << " ***" << std::endl;
+// 	std::cout << " Location : ( " << coord_x << " , " << coord_y << " ) " << std::endl;
+// 	std::cout << " HP : " << hp << std::endl;
+// }
+// Marine::~Marine() {
+// 	std::cout << name << " 의 소멸자 호출! " << std::endl;
+// 	if (name != NULL)
+// 		delete[] name;
+// } // 생성자가 클래스 이름과 똑같이 생겼다면 소멸자는 그 앞에 ~만 붙히면 된다.
+// int main()
+// {
+// 	Marine *marines[100];
+// 	marines[0] = new Marine(2, 3, "Marine 2");
+// 	marines[1] = new Marine(1, 5, "Marine 1");
+// 	marines[0]->show_status();
+// 	marines[1]->show_status();
+// 	std::cout << std::endl << "마린 1 이 마린 2 를 공격! " << std::endl;
+// 	marines[0]->be_attacked(marines[1]->attack());
+// 	marines[0]->show_status();
+// 	marines[1]->show_status();
+// 	delete marines[0];
+// 	delete marines[1];
+// }
+
+/* 복사 생성자 */
+// 포토캐논
+/* #include <string.h>
+
 #include <iostream>
-class Date {
-int year_;
-int month_; // 1 부터 12 까지.
-int day_; // 1 부터 31 까지.
-public:
-void ShowDate();
-Date() {
-year_ = 2012;
-month_ = 7;
-day_ = 12;
-}
+
+class Photon_Cannon {
+	int hp, shield;
+	int coord_x, coord_y;
+	int damage;
+
+	public:
+		Photon_Cannon(int x, int y);
+		Photon_Cannon(const Photon_Cannon& pc);
+
+		void show_status();
 };
-void Date::ShowDate() {
-std::cout << "오늘은 " << year_ << " 년 " << month_ << " 월 " << day_
-<< " 일 입니다 " << std::endl;
+Photon_Cannon::Photon_Cannon(const Photon_Cannon& pc) {
+	std::cout << "복사 생성자 호출! " << std::endl;
+	hp = pc.hp;
+	shield = pc.shield;
+	coord_x = pc.coord_x;
+	coord_y = pc.coord_y;
+	damage = pc.damage;
+}
+Photon_Cannon::Photon_Cannon(int x, int y) {
+	std::cout << "생성자 호출 !" << std::endl;
+	hp = shield = 100;
+	coord_x = x;
+	coord_y = y;
+	damage = 20;
+}
+void Photon_Cannon::show_status() {
+	std::cout << "Photon Cannon " << std::endl;
+	std::cout << " Location : ( " << coord_x << " , " << coord_y << " ) " << std::endl;
+	std::cout << " HP : " << hp << std::endl;
 }
 int main() {
-Date day = Date();
-Date day2;
-day.ShowDate();
-day2.ShowDate();
-return 0;
+	Photon_Cannon pc1(3, 3);
+	Photon_Cannon pc2(pc1);
+	Photon_Cannon pc3 = pc2;  // 복사 생성자는 오직 '생성'시에 호출된다.
+
+	pc1.show_status();
+	pc2.show_status();
+} */
+
+/* 디폴트 복사 생성자의 한계
+	해결 방법 -> 얕은 복사(shallow copy)를 통해 디폴트 복사, 깊은 복사(delete할 때 이미 해제된 메모리엔 접근 X, 사용자가 직접 복사 생성자 생성*/
+/* #include <string.h>
+
+#include <iostream>
+
+class Photon_Cannon {
+	int hp, shield;
+	int coord_x, coord_y;
+	int damage;
+
+	char	*name;
+
+	public:
+		Photon_Cannon(int x, int y);
+		Photon_Cannon(int x, int y, const char *cannon_name);
+		Photon_Cannon(const Photon_Cannon& pc);
+		~Photon_Cannon();
+
+		void show_status();
+};
+Photon_Cannon::Photon_Cannon(const Photon_Cannon& pc) {
+	std::cout << "복사 생성자 호출! " << std::endl;
+	hp = pc.hp;
+	shield = pc.shield;
+	coord_x = pc.coord_x;
+	coord_y = pc.coord_y;
+	damage = pc.damage;
+
+	name = new char[strlen(pc.name) + 1];
+	strcpy(name, pc.name);
 }
+
+Photon_Cannon::Photon_Cannon(int x, int y, const char *cannon_name) {
+	hp = shield = 100;
+	coord_x = x;
+	coord_y = y;
+	damage = 20;
+
+	name = new char[strlen(cannon_name) + 1];
+	strcpy(name, cannon_name);
+}
+
+Photon_Cannon::~Photon_Cannon() {
+	if (name) delete[] name;
+}
+
+Photon_Cannon::Photon_Cannon(int x, int y) {
+	std::cout << "생성자 호출 !" << std::endl;
+	hp = shield = 100;
+	coord_x = x;
+	coord_y = y;
+	damage = 20;
+
+	name = NULL;
+}
+void Photon_Cannon::show_status() {
+	std::cout << "Photon Cannon " << std::endl;
+	std::cout << " Location : ( " << coord_x << " , " << coord_y << " ) " << std::endl;
+	std::cout << " HP : " << hp << std::endl;
+}
+int main() {
+	Photon_Cannon pc1(3, 3, "Cannon");
+	Photon_Cannon pc2 = pc1;
+
+	pc1.show_status();
+	pc2.show_status();
+} */
+
+/* 생성자의 초기화 리스트 */
+// #include <iostream>
+
+// class Marine
+// {
+// 	int hp;				  // 마린 체력
+// 	int coord_x, coord_y; // 마린 위치
+// 	int damage;			  // 공격력
+// 	bool is_dead;
+
+// public:
+// 	Marine();			  // 기본 생성자
+// 	Marine(int x, int y); // x, y 좌표에 마린 생성
+
+// 	int attack();					   // 데미지를 리턴한다.
+// 	void be_attacked(int damage_earn); // 입는 데미지
+// 	void move(int x, int y);		   // 새로운 위치
+
+// 	void show_status(); // 상태를 보여준다.
+// };
+
+// Marine::Marine() : hp(50), coord_x(0), coord_y(0), damage(5), is_dead(false) {} // 초기화 리스트 <- 생성과 초기화를 동시
+
+// Marine::Marine(int x, int y)
+// 	: coord_x(x), coord_y(y), hp(50), damage(5), is_dead(false) {}
+
+// void Marine::move(int x, int y)
+// {
+// 	coord_x = x;
+// 	coord_y = y;
+// }
+// int Marine::attack() { return damage; }
+// void Marine::be_attacked(int damage_earn)
+// {
+// 	hp -= damage_earn;
+// 	if (hp <= 0)
+// 		is_dead = true;
+// }
+// void Marine::show_status()
+// {
+// 	std::cout << " *** Marine *** " << std::endl;
+// 	std::cout << " Location : ( " << coord_x << " , " << coord_y << " ) " << std::endl;
+// 	std::cout << " HP : " << hp << std::endl;
+// }
+
+// int main()
+// {
+// 	Marine marine1(2, 3);
+// 	Marine marine2(3, 5);
+
+// 	marine1.show_status();
+// 	marine2.show_status();
+// }
+
+// #include <iostream>
+
+// class Marine
+// {
+// 	int hp;				  // 마린 체력
+// 	int coord_x, coord_y; // 마린 위치
+// 	bool is_dead;
+
+// 	const int default_damage; // 기본 공격력
+
+// public:
+// 	Marine();			  // 기본 생성자
+// 	Marine(int x, int y); // x, y 좌표에 마린 생성
+
+// 	int attack();					   // 데미지를 리턴한다.
+// 	void be_attacked(int damage_earn); // 입는 데미지
+// 	void move(int x, int y);		   // 새로운 위치
+
+// 	void show_status(); // 상태를 보여준다.
+// };
+// Marine::Marine()
+// 	: hp(50), coord_x(0), coord_y(0), default_damage(5), is_dead(false) {}
+
+// Marine::Marine(int x, int y)
+// 	: coord_x(x), coord_y(y), hp(50), default_damage(5), is_dead(false) {}
+
+// void Marine::move(int x, int y)
+// {
+// 	coord_x = x;
+// 	coord_y = y;
+// }
+// int Marine::attack() { return default_damage; }
+// void Marine::be_attacked(int damage_earn)
+// {
+// 	hp -= damage_earn;
+// 	if (hp <= 0)
+// 		is_dead = true;
+// }
+// void Marine::show_status()
+// {
+// 	std::cout << " *** Marine *** " << std::endl;
+// 	std::cout << " Location : ( " << coord_x << " , " << coord_y << " ) "
+// 			  << std::endl;
+// 	std::cout << " HP : " << hp << std::endl;
+// }
+
+// int main()
+// {
+// 	Marine marine1(2, 3);
+// 	Marine marine2(3, 5);
+
+// 	marine1.show_status();
+// 	marine2.show_status();
+
+// 	std::cout << std::endl
+// 			  << "마린 1 이 마린 2 를 공격! " << std::endl;
+// 	marine2.be_attacked(marine1.attack());
+
+// 	marine1.show_status();
+// 	marine2.show_status();
+// }
+
+// #include <iostream>
+
+// class Marine
+// {
+// 	int hp;				  // 마린 체력
+// 	int coord_x, coord_y; // 마린 위치
+// 	bool is_dead;
+
+// 	const int default_damage; // 기본 공격력
+
+// public:
+// 	Marine();			  // 기본 생성자
+// 	Marine(int x, int y); // x, y 좌표에 마린 생성
+// 	Marine(int x, int y, int default_damage);
+
+// 	int attack();					   // 데미지를 리턴한다.
+// 	void be_attacked(int damage_earn); // 입는 데미지
+// 	void move(int x, int y);		   // 새로운 위치
+
+// 	void show_status(); // 상태를 보여준다.
+// };
+// Marine::Marine()
+// 	: hp(50), coord_x(0), coord_y(0), default_damage(5), is_dead(false) {}
+
+// Marine::Marine(int x, int y)
+// 	: coord_x(x), coord_y(y), hp(50), default_damage(5), is_dead(false) {}
+
+// Marine::Marine(int x, int y, int default_damage)
+// 	: coord_x(x),
+// 	  coord_y(y),
+// 	  hp(50),
+// 	  default_damage(default_damage),
+// 	  is_dead(false) {}
+
+// void Marine::move(int x, int y)
+// {
+// 	coord_x = x;
+// 	coord_y = y;
+// }
+// int Marine::attack() { return default_damage; }
+// void Marine::be_attacked(int damage_earn)
+// {
+// 	hp -= damage_earn;
+// 	if (hp <= 0)
+// 		is_dead = true;
+// }
+// void Marine::show_status()
+// {
+// 	std::cout << " *** Marine *** " << std::endl;
+// 	std::cout << " Location : ( " << coord_x << " , " << coord_y << " ) "
+// 			  << std::endl;
+// 	std::cout << " HP : " << hp << std::endl;
+// }
+
+// int main()
+// {
+// 	Marine marine1(2, 3, 10);
+// 	Marine marine2(3, 5, 10);
+
+// 	marine1.show_status();
+// 	marine2.show_status();
+
+// 	std::cout << std::endl
+// 			  << "마린 1 이 마린 2 를 공격! " << std::endl;
+// 	marine2.be_attacked(marine1.attack());
+
+// 	marine1.show_status();
+// 	marine2.show_status();
+// }
+
+// #include <iostream>
+
+// class Marine
+// {
+// 	static int total_marine_num;
+
+// 	int hp;				  // 마린 체력
+// 	int coord_x, coord_y; // 마린 위치
+// 	bool is_dead;
+
+// 	const int default_damage; // 기본 공격력
+
+// public:
+// 	Marine();			  // 기본 생성자
+// 	Marine(int x, int y); // x, y 좌표에 마린 생성
+// 	Marine(int x, int y, int default_damage);
+
+// 	int attack();					   // 데미지를 리턴한다.
+// 	void be_attacked(int damage_earn); // 입는 데미지
+// 	void move(int x, int y);		   // 새로운 위치
+
+// 	void show_status(); // 상태를 보여준다.
+
+// 	~Marine() { total_marine_num--; }
+// };
+// int Marine::total_marine_num = 0;
+
+// Marine::Marine()
+// 	: hp(50), coord_x(0), coord_y(0), default_damage(5), is_dead(false)
+// {
+// 	total_marine_num++;
+// }
+
+// Marine::Marine(int x, int y)
+// 	: coord_x(x), coord_y(y), hp(50), default_damage(5), is_dead(false)
+// {
+// 	total_marine_num++;
+// }
+
+// Marine::Marine(int x, int y, int default_damage)
+// 	: coord_x(x),
+// 	  coord_y(y),
+// 	  hp(50),
+// 	  default_damage(default_damage),
+// 	  is_dead(false)
+// {
+// 	total_marine_num++;
+// }
+
+// void Marine::move(int x, int y)
+// {
+// 	coord_x = x;
+// 	coord_y = y;
+// }
+// int Marine::attack() { return default_damage; }
+// void Marine::be_attacked(int damage_earn)
+// {
+// 	hp -= damage_earn;
+// 	if (hp <= 0)
+// 		is_dead = true;
+// }
+// void Marine::show_status()
+// {
+// 	std::cout << " *** Marine *** " << std::endl;
+// 	std::cout << " Location : ( " << coord_x << " , " << coord_y << " ) "
+// 			  << std::endl;
+// 	std::cout << " HP : " << hp << std::endl;
+// 	std::cout << " 현재 총 마린 수 : " << total_marine_num << std::endl;
+// }
+
+// void create_marine()
+// {
+// 	Marine marine3(10, 10, 4);
+// 	marine3.show_status();
+// }
+// int main()
+// {
+// 	Marine marine1(2, 3, 5);
+// 	marine1.show_status();
+
+// 	Marine marine2(3, 5, 10);
+// 	marine2.show_status();
+
+// 	create_marine();
+
+// 	std::cout << std::endl
+// 			  << "마린 1 이 마린 2 를 공격! " << std::endl;
+// 	marine2.be_attacked(marine1.attack());
+
+// 	marine1.show_status();
+// 	marine2.show_status();
+// }
+
+// static 함수
+// #include <iostream>
+
+// class Marine
+// {
+// 	static int total_marine_num;
+// 	const static int i = 0;
+
+// 	int hp;				  // 마린 체력
+// 	int coord_x, coord_y; // 마린 위치
+// 	bool is_dead;
+
+// 	const int default_damage; // 기본 공격력
+
+// public:
+// 	Marine();			  // 기본 생성자
+// 	Marine(int x, int y); // x, y 좌표에 마린 생성
+// 	Marine(int x, int y, int default_damage);
+
+// 	int attack();					   // 데미지를 리턴한다.
+// 	void be_attacked(int damage_earn); // 입는 데미지
+// 	void move(int x, int y);		   // 새로운 위치
+
+// 	void show_status(); // 상태를 보여준다.
+// 	static void show_total_marine();
+// 	~Marine() { total_marine_num--; }
+// };
+// int Marine::total_marine_num = 0;
+// void Marine::show_total_marine()
+// {
+// 	std::cout << "전체 마린 수 : " << total_marine_num << std::endl;
+// }
+// Marine::Marine()
+// 	: hp(50), coord_x(0), coord_y(0), default_damage(5), is_dead(false)
+// {
+// 	total_marine_num++;
+// }
+
+// Marine::Marine(int x, int y)
+// 	: coord_x(x), coord_y(y), hp(50), default_damage(5), is_dead(false)
+// {
+// 	total_marine_num++;
+// }
+
+// Marine::Marine(int x, int y, int default_damage)
+// 	: coord_x(x),
+// 	  coord_y(y),
+// 	  hp(50),
+// 	  default_damage(default_damage),
+// 	  is_dead(false)
+// {
+// 	total_marine_num++;
+// }
+
+// void Marine::move(int x, int y)
+// {
+// 	coord_x = x;
+// 	coord_y = y;
+// }
+// int Marine::attack() { return default_damage; }
+// void Marine::be_attacked(int damage_earn)
+// {
+// 	hp -= damage_earn;
+// 	if (hp <= 0)
+// 		is_dead = true;
+// }
+// void Marine::show_status()
+// {
+// 	std::cout << " *** Marine *** " << std::endl;
+// 	std::cout << " Location : ( " << coord_x << " , " << coord_y << " ) "
+// 			  << std::endl;
+// 	std::cout << " HP : " << hp << std::endl;
+// 	std::cout << " 현재 총 마린 수 : " << total_marine_num << std::endl;
+// }
+
+// void create_marine()
+// {
+// 	Marine marine3(10, 10, 4);
+// 	Marine::show_total_marine();
+// }
+// int main()
+// {
+// 	Marine marine1(2, 3, 5);
+// 	Marine::show_total_marine();
+
+// 	Marine marine2(3, 5, 10);
+// 	Marine::show_total_marine();
+
+// 	create_marine();
+
+// 	std::cout << std::endl
+// 			  << "마린 1 이 마린 2 를 공격! " << std::endl;
+// 	marine2.be_attacked(marine1.attack());
+
+// 	marine1.show_status();
+// 	marine2.show_status();
+// }
