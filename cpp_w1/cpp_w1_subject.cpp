@@ -245,46 +245,55 @@ int main()
 // 	return (len);
 // }
 
-/* Point로 점에 관한 정보들 담고, 하나는 Geometry로 점들을 가지고 연산을 하는 클래스 */
-#include <iostream>
-#include <math.h>
-class Point {
-	int x,y;
 
-	public:
-		Point(int pos_x, int pos_y)
-		{
-			x = pos_x;
-			y = pos_y;
-		}
-};
+/*
+	4 - 2 문제 2.
+	클래스는 총 두 개
+	1. Point로 점에 관한 정보를 담는 것
+	2. Geometry로 점들을 가지고 연산을 하는 클래스.
+	
+	코드에 힌트로 주어진 부분들에 대해서 조사하고 코드로 적용하자!
+	edge point들 확인하기. <수학 공식들에서 발생할 수 있는 것들, 나눠지는 값이 '0'일 경우
+*/
+// #include <iostream>
+// #include <math.h>
+// class Point {
+// 	int x,y;
 
-class Geometry {
-	private:
-	// 점 100 개를 보관하는 배열.
-	Point* point_array[100];
-	int num_points;
+// 	public:
+// 		Point(int pos_x, int pos_y)
+// 		{
+// 			x = pos_x;
+// 			y = pos_y;
+// 		}
+// };
 
-	public:
-		Geometry() {
-			num_points = 0;
-		}
+// class Geometry {
+// 	private:
+// 	// 점 100 개를 보관하는 배열.
+// 	Point* point_array[100];
+// 	int num_points;
 
-		void AddPoint(const Point &point); {
-			point_array[num_points++] = new Point(point.x, point.y);
-		}
+// 	public:
+// 		Geometry() {
+// 			num_points = 0;
+// 		}
 
-		// 모든 점들 간의 거리를 출력하는 함수
-		void PrintDistance ()
-		{
+// 		void AddPoint(const Point &point); {
+// 			point_array[num_points++] = new Point(point.x, point.y);
+// 		}
+
+// 		// 모든 점들 간의 거리를 출력하는 함수
+// 		void PrintDistance ()
+// 		{
 			
-		}
+// 		}
 
-		// 모든 점들을 잇는 직선들 간의 교점의 수를 출력해주는 함수.
-		/* 참고로 임의의 두 점을 잇는 직선의 방정식을 f(x,y) = ax+by+c = 0
-			이라고 할 때 임의의 다른 두 점 (x1, y1) 과 (x2,y2) 가 f(x,y) = 0을 기준으로
-			서로 다른 부분에 있을 조건은 f(x1, y1) * f(x2, y2) <= 0 이면 된다.*/
-		void PrintNumMeets();
+// 		// 모든 점들을 잇는 직선들 간의 교점의 수를 출력해주는 함수.
+// 		/* 참고로 임의의 두 점을 잇는 직선의 방정식을 f(x,y) = ax+by+c = 0
+// 			이라고 할 때 임의의 다른 두 점 (x1, y1) 과 (x2,y2) 가 f(x,y) = 0을 기준으로
+// 			서로 다른 부분에 있을 조건은 f(x1, y1) * f(x2, y2) <= 0 이면 된다.*/
+// 		void PrintNumMeets();
 
 
-};
+// };
