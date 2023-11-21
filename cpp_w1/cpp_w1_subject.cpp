@@ -297,3 +297,72 @@ int main()
 
 
 // };
+
+/*
+	4 - 3 생각해보기 문제
+	1. 아래와 같은 문자열 클래스를 완성해보세요.
+*/
+
+// #include <iostream>
+
+// class string {
+// 	char *str;
+// 	int len;
+
+// 	public:
+// 		string(char c, int n); //  문자 c 가 n 개 있는 문자열로 정의
+// 		string(const char *s);
+// 		string(const string &s);
+// 		~string(); // 소멸자
+
+// 	void add_string(const string &s); // str  뒤에 s를 붙인다.
+// 	void copy_string(const string &s); // str 에 s를 복사한다.
+// 	int strlen(); // 문자열 길이 리턴 
+// };
+
+/*
+	4 - 4 생가해보기 문제
+	아래와 같은 코드에서 복사 생성은 몇 번이나 표시될까?
+*/
+
+// #include <iostream>
+
+// class A {
+//   int x;
+
+//  public:
+//   A(int c) : x(c) {}
+//   A(const A& a) {
+//     x = a.x;
+//     std::cout << "복사 생성" << std::endl;
+//   }
+// };
+
+// class B {
+//   A a;
+
+//  public:
+//   B(int c) : a(c) {}
+//   B(const B& b) : a(b.a) {}
+//   A get_A() {
+//     A temp(a);
+//     return temp;
+//   }
+// };
+
+// int main() {
+// 	B b(10);
+
+// 	std::cout << "----------" << std::endl;
+// 	A a1 = b.get_A();
+// }
+
+/*
+	두 번 아닌가?
+	1. 일단 값 10을 넣어서 b 생성 
+	2. b 인스턴스에서 A get_A() 인스턴스 메소드 호출
+	3.  A temp(a) a-> A a private 값
+	4.	A의 생성자 중, 레퍼런스를 리턴하는 생성자로 복사 생성 1회 실행 A temp를 리턴 받음
+	5.  A a1 = temp -> A a1 = b.get_A();
+	6.	그리고 A a1에 최종적으로 복사를 하면서, 총 2회 발생
+ */

@@ -830,7 +830,30 @@ int main() {
 	pc2.show_status();
 } */
 
-/* 생성자의 초기화 리스트 */
+/* 생성자의 초기화 리스트
+	생성자 호출과 동시에 멤버 변수들을 초기화해주게 된다.
+	멤버 초기화 리스트이 일반적인 꼴
+	(생성자 이름) : var1(arg1), var2(arg2) {} *
+	var 들은 클래스의 멤버 변수들 지칭
+	arg는 그 멤버 변수들을 무엇으로 초기화 할 지 지칭하는 역할
+	var1 이름 == arg1 이름
+	ex) coord_x(coord_x)라고 입력 시, 바깥쪽 -> 무조건 멤버 변수 지칭
+	괄호 안의 값 인자로 인식.
+
+	생성자와 초기화 리스트 동일한 일을하는데, 왜 초기화 리스트를 사용해야할 까?
+	차이점 : 초기화 리스트를 사용할 경우 생성과 초기화를 동시에 한다.
+	초기화 리스트를 사용하지 않는다면 생성을 먼저 하고 그 다음에 대입을 수행
+	ex) int a = 10; -> 초기화 리스트 사용
+		int a;
+		a = 10; -> 예전 버전의 생성자 사용.
+
+	초기화 리스트를 사용하는 것이 더 효율적인 작업(하는 일이 줄어듬 -> 초기화와 생성을 같이 하기 때문)
+	다른 이유, '생성과 동시에 초기화 되어야 하는 것들이 존재함.
+	1. 레퍼런스
+	2. 상수
+	클래스 내부에 레퍼런스 변수나 상수를 넣고 싶다면 이들을 생성자에서 무조건 초기화 리스트를 사용해서 초기화 시켜줘야 한다.
+*/
+
 // #include <iostream>
 
 // class Marine
@@ -1016,6 +1039,26 @@ int main() {
 // 	marine2.show_status();
 // }
 
+/* static 멤버 변수의 사용 
+	전역 변수의 경우 프로젝트의 크기가 커질 수 록 프로그래머의 실수로 인해 서로 겹쳐서 오류가 날 가능성이
+	다분허가 때문제 반드시 필요한 경우가 아니면 사용을 하지 않는다.
+	전역 변수 같지만 클래스 하나에만 종속되는 변수 -> static 멤버 변수
+
+	C 언어에서 어떠한 함수의 static 변수가 지역 변수들 처럼 함수가 종료될 때 소멸되는 것이 아니라 프로그램이
+	종료될 때 소멸되는 것 처럼, 어떤 클래스의 static 멤버 변수의 경우, 멤버 변수들 처럼, 객체가 소멸될 때
+	소멸되는 것이 아닌, 프로그램이 종료될 때 소멸되는 것.
+
+	또한, 이 static 멤버 변수의 경우, 클래스의 모든 객체들이 '공유'하는 변수로써 각 객체 별로 따로
+	존재하는 멤버 변수들과는 달리 모든 객체들이 '하나의' staitc 멤버 변수를 사용하게 된다.
+
+	static 변수들은 정의와 동시에 값이 자동으로 0으로 초기화.
+	클래스 static 변수들의 경우 아래와 같은 방법으로 초기화
+	int Marine::total_marine_num = 0;
+	static 변수 역시 클래스 내부에서 초기화 하는 것은 불가능.
+	static int total_marine = 0; 이 방식처럼 하려면
+	const static int x = 0;과 같은 const static 변수일 때만 가능.
+*/
+
 // #include <iostream>
 
 // class Marine
@@ -1109,7 +1152,28 @@ int main() {
 // 	marine2.show_status();
 // }
 
-// static 함수
+/*
+	static 함수 
+	특정 객체에 종속되는 것이 아니라 클래스 전체에 딱 1개 존재
+	static 이 아닌 멤버 함수들의 경우 객체를 만들어야하지만 각 멤버 함수들을 호출할 수 있음.
+	static 함수의 경우, 객체가 없어도 그냥 클래스 자체에서 호출할 수 있게 된다.
+	일반 함수 호출 방법
+	(객체).(멤버함수)
+	ex) marine1.show_status();
+	static 함수 호출 방법
+	Marine::show_total_marine();
+	(클래스)::(static 함수) -> 어떠한 객체도 이 함수를 소유하고 있지 않기 때문.
+	static 함수 내에서는 클래스의 static 변수만을 이용할 수 밖에 없다.
+	static 함수내에서 그냥 클래스의 멤버 변수들을 이용한다면.
+	ex)
+	void Marine::show_total_marine() {
+		std::cout << default_damage << std::endl; // default_damage 는 멤버 변수
+		std::cout << "전체 마린 수 : " << total_marine_num << std::endl;
+	}
+	default_damage가 누구의 default_damage 인지 아무도 모르는 상황이 발생
+	그 이유는 어떤 객체에도 속해있지 않기 때문에 누구의 것인지 알 수 없다.
+*/
+
 // #include <iostream>
 
 // class Marine
@@ -1202,6 +1266,274 @@ int main() {
 // 	std::cout << std::endl
 // 			  << "마린 1 이 마린 2 를 공격! " << std::endl;
 // 	marine2.be_attacked(marine1.attack());
+
+// 	marine1.show_status();
+// 	marine2.show_status();
+// }
+
+/*
+	this
+	자기 자신을 가리키는 포인터 this
+	객체 자신을 가르키는 포인터의 역할. 즉, 이 멤버 함수를 호출하는 객체 자신을 가리킨다는 것
+
+	Marine& Marine::be_attacked(int damage_earn) {
+		hp -= damage_earn;
+		if (hp <= 0) is_dead = true;
+
+		return *this;
+	}
+
+	Marine& Marine::be_attacked(int damage_earn) {
+		this->hp -= damage_earn;
+		if (this->hp <= 0) this->is_dead = true;
+
+		return *this;
+	}	
+*/
+// #include <iostream>
+
+// class Marine {
+// 	static int total_marine_num;
+// 	const static int i = 0;
+
+// 	int hp;	// 마린 체력
+// 	int coord_x, coord_y; // 마린 위치
+// 	bool is_dead;
+
+// 	const int default_damage; // 기본 공격력
+
+// 	public:
+// 		Marine(); // 기본 생성자
+// 		Marine(int x, int y); // x, y 좌표에 마린 생성
+// 		Marine(int x, int y, int default_damage);
+
+// 	int attack(); // 데미지를 리턴한다.
+// 	Marine& be_attcked(int damage_earn); // 입는 데미지
+// 	void move(int x, int y);
+
+// 	void show_status(); // 상태를 보여준다.
+// 	static void show_total_marine();
+// 	~Marine() { total_marine_num--; }
+// };
+
+// int Marine::total_marine_num = 0;
+// void Marine::show_total_marine() {
+// 	std::cout << "전체 마린 수 : " << total_marine_num << std::endl;
+// }
+
+// Marine::Marine()
+// 	: hp(50), coord_x(0), coord_y(0), default_damage(5), is_dead(false) {
+// 		total_marine_num++;
+// 	}
+
+// Marine::Marine(int x, int y)
+// 	: coord_x(x),
+// 	  coord_y(y),
+// 	  hp(50),
+
+// 	  default_damage(5),
+// 	  is_dead(false) {
+// 		total_marine_num++;
+// 	}
+
+// Marine::Marine(int x, int y, int default_damage)
+// 	: coord_x(x),
+// 	  coord_y(y),
+// 	  hp(50),
+// 	  default_damage(default_damage),
+// 	  is_dead(false) {
+// 		total_marine_num++;
+// 	}
+
+// void Marine::move(int x, int y) {
+// 	coord_x = x;
+// 	coord_y = y;
+// }
+
+// int Marine::attack() { return default_damage; }
+// Marine& Marine::be_attcked(int damafe_earn) {
+// 	hp -= damafe_earn;
+// 	if (hp <= 0) is_dead = true;
+
+// 	return *this; 
+// }
+
+// void Marine::show_status() {
+// 	std::cout << " *** Marine *** " << std::endl;
+// 	std::cout << " Location : ( " << coord_x << " , " << coord_y << " ) " << std::endl;
+// 	std::cout << " HP : " << hp << std::endl;
+// 	std::cout << "현재 총 마린 수 : " << total_marine_num << std::endl;
+// }
+
+// int main() {
+// 	Marine marine1(2, 3 ,5);
+// 	marine1.show_status();
+
+// 	Marine marine2(3, 5, 10);
+// 	marine2.show_status();
+
+// 	std::cout << std::endl << "마린 1 이 마린 2 를 두 번 공격! " << std::endl;
+// 	marine2.be_attcked(marine1.attack()).be_attcked(marine1.attack());
+
+// 	marine1.show_status();
+// 	marine2.show_status();
+// }
+
+/* 
+	레퍼런스를 리턴하는 함수
+	레퍼런스가 아닌 타입을 리턴하는 경우는 '값'의 복사가 이루어지기 때문에 임시 객체가 생성되는데,
+	임시객체의 레퍼런스를 가질 수 없기 때문이다.(임시객체는 문장이 끝나게 되면 소멸)
+	a.access_x() = 3;
+	위 문장이 잘 작동한다는 점.
+	'레퍼런스를 리턴하는 함수는 그 함수 부분을 리턴하는 원래 변수로 치환해도 된다.'
+	a.x=3;과 같은 뜻
+	a.get_x() = 3;
+	오류 발생 -> a.get_x() 는 get_x() 가 리턴하면서 생기는 임시 객체로 치환되며 임시 객체에 대입을 하게
+	되는 모순적인 상황이 발생
+	간단하게 말하면, 지역변수가 리턴하는데 그 함수 끝나면 없어지니까 레퍼런스 줄 수 없다~ 라는 뜻 그래서
+	리턴형이 레퍼런스가 아닌 것을 쓰면 임시 객체가 발생하니까. 복사를 해야하는데 없어지는 것을 복사하니까 오류가 생긴다.
+	임시객체에 값을 대입하는 것도 문제. 없어지는 값에 값을 넣는게 말이 되냐라는 뜻.
+*/
+
+// #include <iostream>
+
+// class A {
+// 	int x;
+
+// 	public:
+// 	A(int c) : x(c) {}
+
+// 	int& access_x() { return x;}
+// 	int get_x() { return x; }
+// 	void show_x() { std::cout << x << std::endl; }
+// };
+
+// int main() {
+// 	A a(5);
+// 	a.show_x();
+
+// 	int &c = a.access_x();
+// 	c = 4;
+// 	a.show_x();
+
+// 	int d = a.access_x();
+// 	d = 3;
+// 	a.show_x();
+
+// 	// 아래는 오류
+// 	// int& e = a.get_x();
+// 	// e = 2;
+// 	// a.show_x();
+
+// 	int f = a.get_x();
+// 	f = 1;
+// 	a.show_x();
+// }
+
+/*
+	const 함수
+	C++에서는 변수들의 값을 바꾸지 않고 읽기 만 하는, 마치 상수 같은 멤버 함수를 상수 함수로써 선언할 수 있다.
+	
+	상수 함수는 위와 같은 형태로 선언
+	(기존의 함수의 정의) const;
+	함수의 정의 역시 const 키워드를 꼭 넣어주어야 한다.
+	int Marine::attack() const { return default_damage; }
+	위 함수는 '상수 멤버 함수'로 정의.
+	이 함수는 다른 변수의 값을 바꾸지 않는 함수라고 다른 프로그래머에게 명시 시킬 수 있다.
+	상수 함수 내에서는 객체들의 '읽기'만이 수행, 상수 함수 내에서 호출 할 수 있는 함수로는 다른 상수 함수 밖에없다.
+
+	많은 경우 클래스를 설계할 때, 멤버 변수들은 모두 private에 넣고, 이 변수들의 값에 접근하는 방법으로
+	get_x 함수 처럼 함수를 public에 넣어 이 함수를 이용해 값을 리턴받는 형식을 많이 사용
+	-> 위 같은 방법으로 멤버 변수들은 private 에 넣음으로써 함부로 변수에 접근하는 것을 막고, 또 그 값은 자유롭게
+	구할 수 있게 된다.
+
+*/
+
+// 상수 멤버 함수
+// #include <iostream>
+
+// class Marine {
+// 	static int total_marine_num;
+// 	const static int i = 0;
+
+// 	int hp;	// 마린 체력
+// 	int coord_x, coord_y; // 마린 위치
+// 	bool is_dead;
+
+// 	const int default_damage; // 기본 공격력
+
+// 	public:
+// 		Marine(); // 기본 생성자
+// 		Marine(int x, int y); // x, y 좌표에 마린 생성
+// 		Marine(int x, int y, int default_damage);
+
+// 	int attack() const; // 데미지를 리턴한다.
+// 	Marine& be_attcked(int damage_earn); // 입는 데미지
+// 	void move(int x, int y);
+
+// 	void show_status(); // 상태를 보여준다.
+// 	static void show_total_marine();
+// 	~Marine() { total_marine_num--; }
+// };
+
+// int Marine::total_marine_num = 0;
+// void Marine::show_total_marine() {
+// 	std::cout << "전체 마린 수 : " << total_marine_num << std::endl;
+// }
+
+// Marine::Marine()
+// 	: hp(50), coord_x(0), coord_y(0), default_damage(5), is_dead(false) {
+// 		total_marine_num++;
+// 	}
+
+// Marine::Marine(int x, int y)
+// 	: coord_x(x),
+// 	  coord_y(y),
+// 	  hp(50),
+
+// 	  default_damage(5),
+// 	  is_dead(false) {
+// 		total_marine_num++;
+// 	}
+
+// Marine::Marine(int x, int y, int default_damage)
+// 	: coord_x(x),
+// 	  coord_y(y),
+// 	  hp(50),
+// 	  default_damage(default_damage),
+// 	  is_dead(false) {
+// 		total_marine_num++;
+// 	}
+
+// void Marine::move(int x, int y) {
+// 	coord_x = x;
+// 	coord_y = y;
+// }
+
+// int Marine::attack() const { return default_damage; }
+// Marine& Marine::be_attcked(int damafe_earn) {
+// 	hp -= damafe_earn;
+// 	if (hp <= 0) is_dead = true;
+
+// 	return *this; 
+// }
+
+// void Marine::show_status() {
+// 	std::cout << " *** Marine *** " << std::endl;
+// 	std::cout << " Location : ( " << coord_x << " , " << coord_y << " ) " << std::endl;
+// 	std::cout << " HP : " << hp << std::endl;
+// 	std::cout << "현재 총 마린 수 : " << total_marine_num << std::endl;
+// }
+
+// int main() {
+// 	Marine marine1(2, 3, 5);
+// 	marine1.show_status();
+
+// 	Marine marine2(3, 5, 10);
+// 	marine2.show_status();
+
+// 	std::cout << std::endl << "마린 1 이 마린 2 를 두 번 공격! " << std::endl;
+// 	marine2.be_attcked(marine1.attack()).be_attcked(marine1.attack());
 
 // 	marine1.show_status();
 // 	marine2.show_status();
