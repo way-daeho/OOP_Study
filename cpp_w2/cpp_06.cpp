@@ -6,7 +6,7 @@
 /*   By: daehlee <daehlee@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 22:12:28 by daehlee           #+#    #+#             */
-/*   Updated: 2023/11/26 02:34:12 by daehlee          ###   ########.fr       */
+/*   Updated: 2023/11/26 15:17:46 by daehlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,15 +223,15 @@ public:
 int main()
 {
 	EmployeeList emp_list(10);
-	/* 	emp_list.add_employee(new Employee("노홍철", 34, "평사원", 1));
+	 	emp_list.add_employee(new Employee("노홍철", 34, "평사원", 1));
 		emp_list.add_employee(new Employee("하하", 34, "평사원", 1));
 
 		emp_list.add_employee(new Employee("유재석", 41, "부장", 7));
 		emp_list.add_employee(new Employee("정준하", 43, "과장", 4));
 		emp_list.add_employee(new Employee("박명수", 43, "차장", 5));
 		emp_list.add_employee(new Employee("정형돈", 36, "대리", 2));
-		emp_list.add_employee(new Employee("길", 36, "인턴", -2)); */
-/* 	emp_list.add_employee(new Employee("노홍철", 34, "평사원", 1));
+		emp_list.add_employee(new Employee("길", 36, "인턴", -2));
+	emp_list.add_employee(new Employee("노홍철", 34, "평사원", 1));
 	emp_list.add_employee(new Employee("하하", 34, "평사원", 1));
 
 	emp_list.add_manager(new Manager("유재석", 41, "부장", 7, 12));
@@ -669,4 +669,116 @@ Parent 소멸자는 호출되었는가? Child 소멸자를 호출하면서 '알�
 	virtual로 만들어버린다고 해서 문제될 것이 전혀 문제 없다. -> 언제나 동적 바인딩이 제대로 동작하게 할 텐데?
 
 	왜 C++ 에서는 사용자가 직접 virtual 키워드를 이용하게 했을까? -> 약간의 오버헤드 (overhead) 가 존재하기 때문.
+	보통의 함수를 호출하는 것보다 가상 함수를 호출하는 데 시간이 좀 더 오래 걸림.
+
+	C++ 컴파일러는 가상 함수가 하나라도 존재하는 클래스에 대해선, 가상 함수 테이블을 만들게 된다.
+	가상 함수 테이블은 전화 번호부라 생각.
+
+	함수의 이름과 실제로 어떤 함수가 대응되는지 테이블로 저장
+	가상 함수가 아닌 함수는 바로 호출, 가상 함수에 경우 가상 테이블에서 확인 후, 함수 호출
+
+	두 단계에 걸쳐서 함수를 호출함으로써 소프트웨어적으로 동적 바인딩을 구현
+	이러한 이유로 가상 함수를 호출하는 경우, 일반적인 함수 보다 더 시간이 오래 걸리게 된다.
+	이 차이는 미미, 최적화가 매우 중요한 분야에서는 이를 감안할 필요가 있다.
+
+	이러한 이유로 C++ 에선 멤버 함수가 디폴트로 가상함수가 되도록 설정하지는 않는다.
 */
+
+// class Parent {
+// 	public:
+// 		virtual void func1();
+// 		virtual void func2();
+// };
+
+// class Child : public Parent {
+// 	public:
+// 		virtual void func1();
+// 		void func3();
+// };
+
+/**
+ * 	순수 가상 함수(pure virtual function)와 추상 클래스(abstract class)
+ * // 무엇을 하는지 정의되어 있지 않는 함수 -> 반드시 오버라이딩 되어야만 하는 함수
+		// 위와 같은 함수를 순수 가상 함수 (pure virtual function)라고 부름
+		// 순수 가상 함수는 본체가 없기 때문에, 함수를 호출하는 것이 불가능하다. 그래서 객체를 생성하는 것 또한 불가능이다.
+		// 함수 호출을 금지하지 않고, 객체 생성을 금지시키는 것을 택함.
+		// 순수 가상 함수를 최소 한 개 이상 포함하고 있는 클래스 객체를 생성할 수 없다.
+		// 인스터스화 시키기 위해서는 이 클래스를 상속 받는 클래스를 모든 순수 가상 함수는 오버라이딩 해줘야함.
+	
+	순수 가상 함수를 최소 한 개 이상 포함하고 있는 클래스는 객체를 생성할 수 없으며, 인스턴스화 시키기 위해서는
+	이 클래스를 상속 받는 클래스를 만들어서 모든 순수 가상 함수를 오버라이딩 해줘야함.
+	순수 가상 함수를 최소 한개 포함하고 있는 반드시 상속 되어야 하는 클래스를 가리켜 추상 클래스(abstrac class)라 부름
+	<참고로, private 안에 순수 가상 함수를 정의해도 문제 될 것 없다.> 	private 에 정의되어 있다고 해서
+	오버라이드 안된다는 뜻이 아니기 때문, 다만 자식 클래스에서 호출을 못할 뿐.
+
+	추상 클래스를 왜 사용할까?
+
+	추상 클래스 자체로는 인스턴스화 시킬 수 도 없고 (추상 클래스의 객체를 만들 수 없다.)
+	다만, 추상 클래스를 '설계도' 라고 생각하면 좋다.
+
+	이 클래스를 상속 받아서 사용하는 사람에게 "이 기능은 일반적인 상황에서 만들기 힘드니 너가 직접 특수화 되는 클래스에 만들어 써라"
+	
+	추상 클래스의 또 한가지 특징은
+	비록 객체는 생성할 수 없지만, 추상 클래스를 가리키는 포인터는 문제 없이 만들 수 있단 점.
+*/
+
+// #include <iostream>
+
+// class Animal {
+// 	public:
+// 		Animal() {}
+// 		virtual ~Animal() {}
+// 		virtual void speak() = 0; 
+// };
+
+// class Dog : public Animal {
+// 	public:
+// 		Dog() : Animal() {}
+// 		void speak()  { std::cout << "왈왈" << std::endl; }
+// };
+
+// class Cat : public Animal {
+// 	public:
+// 		Cat() : Animal() {}
+// 		void speak()  { std::cout << "야옹야옹" << std::endl; }
+// };
+
+// int main() {
+// 	Animal* dog = new Dog();
+// 	Animal* cat = new Cat();
+
+// 	dog->speak();
+// 	cat->speak();
+// }
+
+/*
+	다중 상속 (multiple inheritance)
+
+	C++ 상속의 또 다른 특징인 다중 상속
+	C++ 에선 한 클래스가 다른 여러 개의 클래스들을 상속 받는 것을 허용한다.
+	생성자의 호출 순서는 오직 상속하는 순서에만 좌우된다.
+
+	다중 상속 시 주의할 점
+	1. 만약 기반 클래스에 동일한 명의 멤버 변수가 있다면?
+		파생 클래스에서 접근할 때 어떤 기반 클래스의 멤버 변수인지 모른다.
+	2. 다이아몬드 상속 혹은 공포의 다이아몬드 상속 이라고 불리는 다중 상속 조심
+		상속이 되는 두 개의 클래스가 공통의 베이스 클래스를 포함하고 있는 형태를 가리켜서 다이아몬드 상속이라 부른다.
+		그 두 클래스를 상속을 받게 된다면??
+
+		이러한 문제를 해결하는 방법 virtual로 상속 받는다 맨 조상 기반 클래스를
+*/
+
+class A{
+	public:
+		int a;
+};
+
+class B {
+	public:
+		int b;
+};
+
+class C : public A, public B {
+	public:
+		int c;
+};
