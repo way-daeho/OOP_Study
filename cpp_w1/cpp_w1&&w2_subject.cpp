@@ -298,29 +298,35 @@ class Geometry {
 			}
 		}
 
+
 		// 모든 점들을 잇는 직선들 간의 교점의 수를 출력해주는 함수.
 		/* 참고로 임의의 두 점을 잇는 직선의 방정식을 f(x,y) = ax+by+c = 0
 			이라고 할 때 임의의 다른 두 점 (x1, y1) 과 (x2,y2) 가 f(x,y) = 0을 기준으로
 			서로 다른 부분에 있을 조건은 f(x1, y1) * f(x2, y2) <= 0 이면 된다.*/
 		void PrintNumMeets()
 		{
+			int meet = 0;
 			if (num_points <= 3)
 			{
 				std::cout << "점의 개수가 부족하여, 두 개의 직선을 구할 수 없습니다. 최소 점의 개수 : 4 현재 점의 개수 : " << num_points << std::endl;
 				exit(1);
 			}
 			int meet = 0;
-			while (1)
+			for (int spot1 = 0; spot1 < num_points - 3; spot1++)
 			{
-				int spot_1 = 0;
-				while (spot_1 < num_points - 4 && 4 <= num_points)
+				for (int spot2 = spot1 + 1; spot2 < num_points - 2; spot2++)
 				{
-					int spot_2 = spot_1 + 1;
-					int spot_3 = spot_2 + 1;
-					int spot_4 = spot_3 + 1;
-					
+					for (int spot3 = spot2 + 1; spot3 < num_points - 1; spot3++)
+					{
+						for (int spot4 = spot3 + 1; spot4 < num_points; spot4++)
+						{
+							if (기울기 같지 않으면)
+								meet++;
+						}
+					}
 				}
 			}
+			std::cout << "모든 점을 잇는 직선의 교점 개수는 : " << meet << " 개 입니다." << std::endl;
 		}
 
 	private:
