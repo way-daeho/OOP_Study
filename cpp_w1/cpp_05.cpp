@@ -6,7 +6,7 @@
 /*   By: daehlee <daehlee@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 17:21:16 by daehlee           #+#    #+#             */
-/*   Updated: 2023/11/26 15:36:54 by daehlee          ###   ########.fr       */
+/*   Updated: 2023/11/26 18:04:24 by daehlee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -473,7 +473,7 @@
 
 // 	// 만일 'i'가 없다면 이 수는 실수 뿐이다.
 // 	if (pos_i == -1){
-// 		str_real = get_number(str, begin, end - 1);
+		// str_real = get_number(str, begin, end - 1);
 
 // 		Complex temp(str_real, str_img);
 // 		return (*this) + temp;
@@ -873,7 +873,7 @@
 
 // int main() {
 //   Complex a(0, 0);
-//   a = a + "-1.1 + i3.923";
+//   a = "-1.1 + i3.923";
 //   a.println();
 //   a = a - "1.2 -i1.823";
 //   a.println();

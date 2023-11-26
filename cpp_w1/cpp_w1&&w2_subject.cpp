@@ -256,47 +256,78 @@ int main()
 	edge point들 확인하기. <수학 공식들에서 발생할 수 있는 것들, 나눠지는 값이 '0'일 경우
 */
 
-// #include <iostream>
-// #include <math.h>
+#include <iostream>
+#include <math.h>
 
-// class Point {
-// 	int x,y;
+class Point {
+	int x,y;
 
-// 	public:
-// 		Point(int pos_x, int pos_y)
-// 		{
-// 			x = pos_x;
-// 			y = pos_y;
-// 		}
-// };
+	public:
+		Point(int pos_x, int pos_y)
+		{
+			x = pos_x;
+			y = pos_y;
+		}
+};
 
-// class Geometry {
-// 	public:
-// 		Geometry() {
-// 			num_points = 0;
-// 		}
+class Geometry {
+	public:
+		Geometry() {
+			num_points = 0;
+		}
 
-// 		void AddPoint(const Point &point); {
-// 			point_array[num_points++] = new Point(point.x, point.y);
-// 		}
+		void AddPoint(const Point &point) {
+			point_array[num_points++] = new Point(point.x, point.y);
+		}
 
-// 		// 모든 점들 간의 거리를 출력하는 함수
-// 		void PrintDistance ()
-// 		{
-			
-// 		}
+		// 모든 점들 간의 거리를 출력하는 함수
+		void PrintDistance()
+		{
+			double distance;
+			int move_i, fix_i = 0;
+			while (1)
+			{
+				move_i = fix_i + 1;
+				distance = sqrt(pow(&point_array[fix_i] - &point_array[move_i]->x) + pow(&point_array[fix_i] - &point_array[move_i]->y));
+				std::cout << fix_i << "번 째 인덱스 점과" << move_i << "번 째 인덱스 점 사이의 거리는 " << distance << "입니다." << std::endl;
+				move_i++;
+				if (move_i == num_points)
+					fix_i++;
+				if (fix_i + 1 == num_points && move_i == num_points)
+					break;
+			}
+		}
 
-// 		// 모든 점들을 잇는 직선들 간의 교점의 수를 출력해주는 함수.
-// 		/* 참고로 임의의 두 점을 잇는 직선의 방정식을 f(x,y) = ax+by+c = 0
-// 			이라고 할 때 임의의 다른 두 점 (x1, y1) 과 (x2,y2) 가 f(x,y) = 0을 기준으로
-// 			서로 다른 부분에 있을 조건은 f(x1, y1) * f(x2, y2) <= 0 이면 된다.*/
-// 		void PrintNumMeets();
+		// 모든 점들을 잇는 직선들 간의 교점의 수를 출력해주는 함수.
+		/* 참고로 임의의 두 점을 잇는 직선의 방정식을 f(x,y) = ax+by+c = 0
+			이라고 할 때 임의의 다른 두 점 (x1, y1) 과 (x2,y2) 가 f(x,y) = 0을 기준으로
+			서로 다른 부분에 있을 조건은 f(x1, y1) * f(x2, y2) <= 0 이면 된다.*/
+		void PrintNumMeets()
+		{
+			if (num_points <= 3)
+			{
+				std::cout << "점의 개수가 부족하여, 두 개의 직선을 구할 수 없습니다. 최소 점의 개수 : 4 현재 점의 개수 : " << num_points << std::endl;
+				exit(1);
+			}
+			int meet = 0;
+			while (1)
+			{
+				int spot_1 = 0;
+				while (spot_1 < num_points - 4 && 4 <= num_points)
+				{
+					int spot_2 = spot_1 + 1;
+					int spot_3 = spot_2 + 1;
+					int spot_4 = spot_3 + 1;
+					
+				}
+			}
+		}
 
-// 	private:
-// 	// 점 100 개를 보관하는 배열.
-// 	Point* point_array[100];
-// 	int num_points;
-// };
+	private:
+	// 점 100 개를 보관하는 배열.
+	Point* point_array[100];
+	int num_points;
+};
 
 /*
 	4 - 3 생각해보기 문제
@@ -451,12 +482,31 @@ int main()
 	문제 1
 	erase 함수에 한 가지 버그가 있다. 사용자가 실수로 문자열의 실제 길이보다 더 많이 지울 때, 이 문제를 한번
 	고쳐보아라.
+	첫 번째 오류를 출력하고 못하게한다.
+	두 번째
+		시작 지점이 문자열보다 길다면 오류 출력
+		num문자가 문자열 보다 길다면, 최대 치를 문자열의 끝으로 변경하면 된다.
+
+	MyString& MyString::erase(int loc, int num) {
+	  loc 의 앞 부터 시작해서 num 문자를 지운다.
+	  if (num < 0 || loc < 0 || loc > string_length) return *this;
+
+	  // 지운다는 것은 단순히 뒤의 문자들을 앞으로 끌고 온다고
+	  // 생각하면 됩니다.
+
+	if (string_length < loc + num)
+		loc + num = string_length;
+	  for (int i = loc + num; i < string_length; i++) {
+	    string_content[i - num] = string_content[i];
+	  }
 
 	문제 2
 	
 	여러가지 검색 알고리즘(KMP, Boyer - Moore)들을 이용하는 find 함수를 만들어보아라.
 	어떤 알고리즘의 경우 미리 계산된 테이블이 필요할 텐데, 이러한 정보들 역시 class 변수로 처리해도 된다.
+	-> 이 문제는 다같이 찾은 후 공유하는 것이 좋을 거 같음!
 */
+
 
 /*
 	5 - 1 내가 만든 연산자 - 연산자 오버로딩 -> 생각해보기 문제
@@ -467,6 +517,39 @@ int main()
 
 	문제 2
 	get_number 함수를 cstdlib 의 atof 함수를 이용해 좀 더 간단하게 나타내보라.
+	double Complex::get_number(const char* str, int from, int to) const {
+ int len;
+  if (from > to) return 0;
+  if (str[from] == '-' || str[from] == '+') 
+  {
+	len++;
+	from++;
+  }
+
+  double num = 0.0;
+  double decimal = 1.0;
+
+  bool integer_part = true;
+  for (int i = from; i <= to; i++) {
+    if (isdigit(str[i]) || '.') {
+		len++;
+    }
+	else
+	{
+	  to = len;
+      break;
+	  }  // 그 이외의 이상한 문자들이 올 경우
+  }
+  char *temp = new char[len];
+  int t_i = 0;
+  for (int i = from; i != to; i++)
+  {
+	temp[t_i] = str[i];
+	t_i++;
+  }
+  num = atof(temp);
+  return num;
+}
 */
 
 /*
