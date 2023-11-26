@@ -255,8 +255,10 @@ int main()
 	코드에 힌트로 주어진 부분들에 대해서 조사하고 코드로 적용하자!
 	edge point들 확인하기. <수학 공식들에서 발생할 수 있는 것들, 나눠지는 값이 '0'일 경우
 */
+
 // #include <iostream>
 // #include <math.h>
+
 // class Point {
 // 	int x,y;
 
@@ -269,11 +271,6 @@ int main()
 // };
 
 // class Geometry {
-// 	private:
-// 	// 점 100 개를 보관하는 배열.
-// 	Point* point_array[100];
-// 	int num_points;
-
 // 	public:
 // 		Geometry() {
 // 			num_points = 0;
@@ -295,7 +292,10 @@ int main()
 // 			서로 다른 부분에 있을 조건은 f(x1, y1) * f(x2, y2) <= 0 이면 된다.*/
 // 		void PrintNumMeets();
 
-
+// 	private:
+// 	// 점 100 개를 보관하는 배열.
+// 	Point* point_array[100];
+// 	int num_points;
 // };
 
 /*
@@ -317,9 +317,87 @@ int main()
 
 // 	void add_string(const string &s); // str  뒤에 s를 붙인다.
 // 	void copy_string(const string &s); // str 에 s를 복사한다.
-// 	int strlen(); // 문자열 길이 리턴 
+// 	int strlen(const string &s);
+// 	int strlen(const char *s); // 문자열 길이 리턴 
 // };
 
+// string::string(char c, int n) {
+// 	str = new char[n];
+// 	if (!str)
+// 	{
+// 		std::cout << "new error" << std::endl;
+// 		exit(1);
+// 	}
+// 	for (int i = 0; i != n; i++)
+// 		str[i] = c;
+// }
+
+// string::string(const char *s)
+// {
+// 	int	s_len = 0;
+// 	while (!s[s_len])
+// 		s_len++;
+// 	str = new char[s_len];
+// 	for (int i = 0; i < s_len; i++)
+// 		str[i] = s[i];
+// }
+
+// string::string(const string &s)
+// {
+// 	len = s.len;
+// 	str = new char[s.len];
+
+// 	for (int i = 0; i != s.len; i++)
+// 		str[i] = s.str[i];
+// }
+
+// void string::add_string(const string &s)
+// {
+// 	char *temp = new char[len];
+// 	for (int ti = 0; ti != len; ti++)
+// 		temp[ti] = str[ti];
+// 	delete[] str;
+// 	char *str = new char[len + s.len];
+
+// 	int str_i = 0;
+// 	for (str_i = 0; str_i != len; str_i++)
+// 		str[str_i] = temp[str_i];
+// 	for (int s_i = 0; s_i != s.len; s_i++)
+// 		str[str_i + s_i] = temp[s_i];
+// 	delete[] temp;
+// 	len += s.len;
+// }
+
+// void string::copy_string(const string &s)
+// {
+// 	if (str != NULL)
+// 		delete[] str;
+// 	char *str = new char[s.len];
+// 	if (!str)
+// 	{
+// 		std::cout << "new 할당 실패" << std::endl;
+// 		exit(1);
+// 	}
+// 	for (int str_i = 0; str_i != s.len; str_i++)
+// 		str[str_i] = s.str[str_i];
+// }
+
+// string::~string() { delete[] str; }
+
+// int string::strlen(const char *s)
+// {
+// 	int s_len = 0;
+// 	while(s[s_len])
+// 		len++;
+// 	len = s_len;
+// 	return len; 
+// }
+
+// int string::strlen(const string &s)
+// {
+// 	len = s.len;
+// 	return len;
+// }
 /*
 	4 - 4 생가해보기 문제
 	아래와 같은 코드에서 복사 생성은 몇 번이나 표시될까?
