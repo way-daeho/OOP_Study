@@ -256,84 +256,84 @@ int main()
 	edge point들 확인하기. <수학 공식들에서 발생할 수 있는 것들, 나눠지는 값이 '0'일 경우
 */
 
-#include <iostream>
-#include <math.h>
+// #include <iostream>
+// #include <math.h>
 
-class Point {
-	int x,y;
+// class Point {
+// 	int x,y;
 
-	public:
-		Point(int pos_x, int pos_y)
-		{
-			x = pos_x;
-			y = pos_y;
-		}
-};
+// 	public:
+// 		Point(int pos_x, int pos_y)
+// 		{
+// 			x = pos_x;
+// 			y = pos_y;
+// 		}
+// };
 
-class Geometry {
-	public:
-		Geometry() {
-			num_points = 0;
-		}
+// class Geometry {
+// 	public:
+// 		Geometry() {
+// 			num_points = 0;
+// 		}
 
-		void AddPoint(const Point &point) {
-			point_array[num_points++] = new Point(point.x, point.y);
-		}
+// 		void AddPoint(const Point &point) {
+// 			point_array[num_points++] = new Point(point.x, point.y);
+// 		}
 
-		// 모든 점들 간의 거리를 출력하는 함수
-		void PrintDistance()
-		{
-			double distance;
-			int move_i, fix_i = 0;
-			while (1)
-			{
-				move_i = fix_i + 1;
-				distance = sqrt(pow(&point_array[fix_i] - &point_array[move_i]->x) + pow(&point_array[fix_i] - &point_array[move_i]->y));
-				std::cout << fix_i << "번 째 인덱스 점과" << move_i << "번 째 인덱스 점 사이의 거리는 " << distance << "입니다." << std::endl;
-				move_i++;
-				if (move_i == num_points)
-					fix_i++;
-				if (fix_i + 1 == num_points && move_i == num_points)
-					break;
-			}
-		}
+// 		// 모든 점들 간의 거리를 출력하는 함수
+// 		void PrintDistance()
+// 		{
+// 			double distance;
+// 			int move_i, fix_i = 0;
+// 			while (1)
+// 			{
+// 				move_i = fix_i + 1;
+// 				distance = sqrt(pow(&point_array[fix_i]->x - &point_array[move_i]->x) + pow(&point_array[fix_i] - &point_array[move_i]->y));
+// 				std::cout << fix_i << "번 째 인덱스 점과" << move_i << "번 째 인덱스 점 사이의 거리는 " << distance << "입니다." << std::endl;
+// 				move_i++;
+// 				if (move_i == num_points)
+// 					fix_i++;
+// 				if (fix_i + 1 == num_points && move_i == num_points)
+// 					break;
+// 			}
+// 		}
 
 
-		// 모든 점들을 잇는 직선들 간의 교점의 수를 출력해주는 함수.
-		/* 참고로 임의의 두 점을 잇는 직선의 방정식을 f(x,y) = ax+by+c = 0
-			이라고 할 때 임의의 다른 두 점 (x1, y1) 과 (x2,y2) 가 f(x,y) = 0을 기준으로
-			서로 다른 부분에 있을 조건은 f(x1, y1) * f(x2, y2) <= 0 이면 된다.*/
-		void PrintNumMeets()
-		{
-			int meet = 0;
-			if (num_points <= 3)
-			{
-				std::cout << "점의 개수가 부족하여, 두 개의 직선을 구할 수 없습니다. 최소 점의 개수 : 4 현재 점의 개수 : " << num_points << std::endl;
-				exit(1);
-			}
-			int meet = 0;
-			for (int spot1 = 0; spot1 < num_points - 3; spot1++)
-			{
-				for (int spot2 = spot1 + 1; spot2 < num_points - 2; spot2++)
-				{
-					for (int spot3 = spot2 + 1; spot3 < num_points - 1; spot3++)
-					{
-						for (int spot4 = spot3 + 1; spot4 < num_points; spot4++)
-						{
-							if (기울기 같지 않으면)
-								meet++;
-						}
-					}
-				}
-			}
-			std::cout << "모든 점을 잇는 직선의 교점 개수는 : " << meet << " 개 입니다." << std::endl;
-		}
+// 		// 모든 점들을 잇는 직선들 간의 교점의 수를 출력해주는 함수.
+// 		/* 참고로 임의의 두 점을 잇는 직선의 방정식을 f(x,y) = ax+by+c = 0
+// 			이라고 할 때 임의의 다른 두 점 (x1, y1) 과 (x2,y2) 가 f(x,y) = 0을 기준으로
+// 			서로 다른 부분에 있을 조건은 f(x1, y1) * f(x2, y2) <= 0 이면 된다.*/
+// 		void PrintNumMeets()
+// 		{
+// 			int meet = 0;
+// 			if (num_points <= 3)
+// 			{
+// 				std::cout << "점의 개수가 부족하여, 두 개의 직선을 구할 수 없습니다. 최소 점의 개수 : 4 현재 점의 개수 : " << num_points << std::endl;
+// 				exit(1);
+// 			}
+// 			int meet = 0;
+// 			for (int spot1 = 0; spot1 < num_points - 3; spot1++)
+// 			{
+// 				for (int spot2 = spot1 + 1; spot2 < num_points - 2; spot2++)
+// 				{
+// 					for (int spot3 = spot2 + 1; spot3 < num_points - 1; spot3++)
+// 					{
+// 						for (int spot4 = spot3 + 1; spot4 < num_points; spot4++)
+// 						{
+// 							if (기울기 같지 않으면)
+// 								meet++;
+// 						}
+// 					}
+// 				}
+// 			}
+// 			std::cout << "모든 점을 잇는 직선의 교점 개수는 : " << meet << " 개 입니다." << std::endl;
+// 		}
 
-	private:
-	// 점 100 개를 보관하는 배열.
-	Point* point_array[100];
-	int num_points;
-};
+// 	private:
+// 	// 점 100 개를 보관하는 배열.
+// 	Point* point_array[100];
+// 	int num_points;
+// };
 
 /*
 	4 - 3 생각해보기 문제
